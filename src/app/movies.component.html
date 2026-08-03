@@ -1,0 +1,68 @@
+<section class="movies-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Movies</p>
+      <h1>Movie catalog</h1>
+    </div>
+    <span class="count-badge">{{ movies.length }} total</span>
+  </header>
+
+  <div class="content-grid">
+    <form class="card form-card" (ngSubmit)="saveMovie()">
+      <h2>{{ editingMovieId ? 'Update movie' : 'Add a movie' }}</h2>
+
+      <label>
+        Title
+        <input type="text" name="title" [(ngModel)]="movieForm.title" required />
+      </label>
+
+      <label>
+        Genre
+        <input type="text" name="genre" [(ngModel)]="movieForm.genre" required />
+      </label>
+
+      <label>
+        Duration (minutes)
+        <input type="number" name="durationMinutes" [(ngModel)]="movieForm.durationMinutes" min="1" required />
+      </label>
+
+      <label>
+        Description
+        <textarea name="description" rows="3" [(ngModel)]="movieForm.description"></textarea>
+      </label>
+
+      <label>
+        Release date
+        <input type="date" name="releaseDate" [(ngModel)]="movieForm.releaseDate" required />
+      </label>
+
+      <div class="actions">
+        <button class="primary-button" type="submit">{{ editingMovieId ? 'Save changes' : 'Create movie' }}</button>
+        <button class="secondary-button" type="button" (click)="cancelEdit()" *ngIf="editingMovieId">Cancel</button>
+      </div>
+    </form>
+
+    <div class="card list-card">
+      <h2>Existing movies</h2>
+
+      <div class="movie-list" *ngIf="movies.length; else emptyState">
+        <article class="movie-item" *ngFor="let movie of movies">
+          <div>
+            <h3>{{ movie.title }}</h3>
+            <p>{{ movie.genre }} • {{ movie.durationMinutes }} min</p>
+            <p class="meta">Released {{ movie.releaseDate | date }}</p>
+            <p class="description" *ngIf="movie.description">{{ movie.description }}</p>
+          </div>
+          <div class="item-actions">
+            <button class="secondary-button" type="button" (click)="editMovie(movie)">Edit</button>
+            <button class="danger-button" type="button" (click)="deleteMovie(movie.id)">Delete</button>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #emptyState>
+        <p class="empty-state">No movies yet. Add the first one from the form.</p>
+      </ng-template>
+    </div>
+  </div>
+</section>
