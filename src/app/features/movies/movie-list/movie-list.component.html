@@ -1,0 +1,41 @@
+<section class="movie-list-container">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Now showing</p>
+      <h1>Active movies</h1>
+    </div>
+    <span class="count-badge">{{ movies().length }} total</span>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state-card">Loading movies...</div>
+  } @else if (hasError()) {
+    <div class="state-card error-state">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" class="secondary-button" (click)="retry()">Retry</button>
+    </div>
+  } @else if (!movies().length) {
+    <div class="state-card">No movies are currently available.</div>
+  } @else {
+    <div class="movies-grid">
+      @for (movie of movies(); track movie.id) {
+        <article class="movie-card" (click)="selectMovie(movie.id)" role="button" tabindex="0">
+          <div class="movie-poster">
+            @if (movie.trailerUrl) {
+              <img [src]="movie.trailerUrl" [alt]="movie.title" />
+            } @else {
+              <div class="no-poster">No Image</div>
+            }
+          </div>
+          <div class="movie-info">
+            <h2>{{ movie.title }}</h2>
+            <p>{{ movie.genre }} | {{ movie.duration }} min</p>
+            <p>{{ movie.language }}</p>
+            <p>Released {{ movie.releaseDate | date }}</p>
+            <p class="description">{{ movie.description }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,47 @@
+.hall-form {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 32rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+input,
+select {
+  padding: 0.8rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+
+.error-text,
+.error-banner {
+  color: #b91c1c;
+}
+
+.error-banner {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+button {
+  width: fit-content;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  background: #0f172a;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

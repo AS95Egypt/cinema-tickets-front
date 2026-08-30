@@ -1,0 +1,71 @@
+<section class="hall-list-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Cinema halls</p>
+      <h1>Hall management</h1>
+      <p class="description">Create, review, and maintain the halls that power your screenings.</p>
+    </div>
+
+    <button type="button" class="primary-button" (click)="createHall()">Create hall</button>
+  </header>
+
+  @if (successMessage()) {
+    <p class="success-banner">{{ successMessage() }}</p>
+  }
+
+  <div class="filter-bar" role="group" aria-label="Hall filters">
+    <button type="button" [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+    <button type="button" [class.active]="filter() === 'active'" (click)="setFilter('active')">Active</button>
+    <button type="button" [class.active]="filter() === 'inactive'" (click)="setFilter('inactive')">Inactive</button>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card">Loading halls...</div>
+  } @else if (error()) {
+    <div class="state-card error-state">
+      <p>{{ error() }}</p>
+      <button type="button" class="secondary-button" (click)="loadHalls()">Retry</button>
+    </div>
+  } @else if (halls().length === 0) {
+    <div class="state-card">No cinema halls have been created yet.</div>
+  } @else if (filteredHalls().length === 0) {
+    <div class="state-card">No halls match the selected filter.</div>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Number of Seats</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Created date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (hall of filteredHalls(); track hall.id) {
+            <tr>
+              <td>{{ hall.title }}</td>
+              <td>{{ hall.numberOfSeats }}</td>
+              <td>{{ hall.type }}</td>
+              <td>
+                <span class="status-badge" [class.inactive]="!hall.isActive">
+                  {{ hall.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>{{ hall.createdAt | date: 'mediumDate' }}</td>
+              <td class="actions">
+                <a [routerLink]="['/admin/halls', hall.id]">View</a>
+                <a [routerLink]="['/admin/halls', hall.id, 'edit']">Edit</a>
+                <button type="button" class="secondary-button" (click)="toggleHall(hall)">
+                  {{ hall.isActive ? 'Deactivate' : 'Activate' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

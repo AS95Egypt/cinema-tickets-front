@@ -1,0 +1,86 @@
+<section class="movie-details-page">
+  @if (successMessage()) {
+    <p class="success-banner">{{ successMessage() }}</p>
+  }
+
+  @if (loading()) {
+    <div class="state-card">Loading movie details...</div>
+  } @else if (error()) {
+    <div class="state-card error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/admin/movies">Back to list</a>
+    </div>
+  } @else {
+    @if (movie(); as item) {
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Movie details</p>
+          <h1>{{ item.title }}</h1>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="secondary-button" (click)="toggleMovie()">
+            {{ item.isActive ? 'Deactivate' : 'Activate' }}
+          </button>
+          <button type="button" class="secondary-button" (click)="edit()">Edit</button>
+          <button type="button" class="primary-button" (click)="back()">Back to list</button>
+        </div>
+      </header>
+
+      <div class="details-card">
+        <dl>
+          <div>
+            <dt>Title</dt>
+            <dd>{{ item.title }}</dd>
+          </div>
+          <div>
+            <dt>Genre</dt>
+            <dd>{{ item.genre }}</dd>
+          </div>
+          <div>
+            <dt>Duration</dt>
+            <dd>{{ item.duration }} min</dd>
+          </div>
+          <div>
+            <dt>Release date</dt>
+            <dd>{{ item.releaseDate | date: 'mediumDate' }}</dd>
+          </div>
+          <div>
+            <dt>Language</dt>
+            <dd>{{ item.language }}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>
+              <span class="status-badge" [class.inactive]="!item.isActive">
+                {{ item.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </dd>
+          </div>
+          <div class="wide">
+            <dt>Description</dt>
+            <dd>{{ item.description }}</dd>
+          </div>
+          <div class="wide">
+            <dt>Actors</dt>
+            <dd>{{ item.actors || '—' }}</dd>
+          </div>
+          <div class="wide" *ngIf="item.trailerUrl">
+            <dt>Trailer</dt>
+            <dd>
+              <a [href]="item.trailerUrl" target="_blank" rel="noopener noreferrer">Open trailer</a>
+            </dd>
+          </div>
+          <div>
+            <dt>Created at</dt>
+            <dd>{{ item.createdAt | date: 'medium' }}</dd>
+          </div>
+          <div>
+            <dt>Updated at</dt>
+            <dd>{{ item.updatedAt | date: 'medium' }}</dd>
+          </div>
+        </dl>
+      </div>
+    }
+  }
+</section>

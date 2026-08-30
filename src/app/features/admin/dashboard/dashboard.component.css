@@ -1,0 +1,55 @@
+.dashboard-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366f1;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+.description {
+  margin-top: 0.6rem;
+  color: #475569;
+  max-width: 56ch;
+  line-height: 1.6;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.25rem;
+  border-radius: 18px;
+  border: 1px solid #dbe4ff;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  text-decoration: none;
+  color: inherit;
+  min-height: 160px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  color: #0f172a;
+}
+
+.card p {
+  color: #475569;
+  line-height: 1.55;
+}

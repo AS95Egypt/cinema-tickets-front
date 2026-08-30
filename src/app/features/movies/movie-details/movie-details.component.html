@@ -1,0 +1,70 @@
+<section class="movie-details-container">
+  <button type="button" class="back-button" (click)="goBack()">Back to Movies</button>
+
+  @if (isLoadingMovie()) {
+    <div class="state-card">Loading movie details...</div>
+  } @else if (hasMovieError()) {
+    <div class="state-card error-state">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" class="secondary-button" (click)="loadMovieDetails()">Retry</button>
+    </div>
+  } @else if (movie()) {
+    <div class="movie-details">
+      <div class="movie-header">
+        <div class="poster">
+          @if (movie()?.trailerUrl) {
+            <img [src]="movie()?.trailerUrl" [alt]="movie()?.title" />
+          } @else {
+            <div class="no-poster">No Image</div>
+          }
+        </div>
+        <div class="meta">
+          <h1>{{ movie()?.title }}</h1>
+          <p><strong>Genre:</strong> {{ movie()?.genre }}</p>
+          <p><strong>Duration:</strong> {{ movie()?.duration }} minutes</p>
+          <p><strong>Language:</strong> {{ movie()?.language }}</p>
+          <p><strong>Release Date:</strong> {{ movie()?.releaseDate | date }}</p>
+          <p class="description">{{ movie()?.description }}</p>
+          @if (movie()?.actors) {
+            <p><strong>Actors:</strong> {{ movie()?.actors }}</p>
+          }
+          @if (movie()?.trailerUrl) {
+            <a [href]="movie()?.trailerUrl" target="_blank" rel="noopener noreferrer">Watch trailer</a>
+          }
+        </div>
+      </div>
+
+      <div class="screenings-section">
+        <h2>Available Screenings</h2>
+        @if (isLoadingScreenings()) {
+          <div class="state-card">Loading screenings...</div>
+        } @else if (hasScreeningsError()) {
+          <div class="state-card error-state">
+            <p>{{ errorMessage() }}</p>
+            <button type="button" class="secondary-button" (click)="loadScreenings()">Retry</button>
+          </div>
+        } @else if (!groupedScreenings().length) {
+          <div class="state-card">No future screenings available.</div>
+        } @else {
+          <div class="screening-groups">
+            @for (group of groupedScreenings(); track group.date) {
+              <section class="screening-group">
+                <h3>{{ group.date }}</h3>
+                <div class="screening-grid">
+                  @for (screening of group.screenings; track screening.id) {
+                    <button type="button" class="screening-card" (click)="selectScreening(screening)">
+                      <span class="time">{{ getScreeningTime(screening.startDateTime) }}</span>
+                      <span>{{ screening.hall.title }} - {{ screening.hall.type }}</span>
+                      <span class="price">{{ screening.price }} EGP</span>
+                      <span class="cta">Select Seats</span>
+                    </button>
+                  }
+                </div>
+              </section>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</section>

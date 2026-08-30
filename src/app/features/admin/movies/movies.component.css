@@ -1,0 +1,26 @@
+.placeholder-page {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 42rem;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366f1;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+a {
+  width: fit-content;
+  text-decoration: none;
+  color: #4338ca;
+  font-weight: 700;
+}

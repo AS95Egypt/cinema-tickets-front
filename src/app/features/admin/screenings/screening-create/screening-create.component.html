@@ -1,0 +1,31 @@
+<section class="screening-create-page">
+  <header class="page-header">
+    <div><p class="eyebrow">Screenings</p><h1>Create screening</h1><p class="description">Schedule an active movie in an active hall.</p></div>
+    <a routerLink="/admin/screenings" class="back-link">Back to screenings</a>
+  </header>
+
+  @if (loading()) {
+    <div class="state-card">Loading active movies and halls...</div>
+  } @else if (error()) {
+    <div class="state-card error-state"><p>{{ error() }}</p></div>
+  } @else {
+    @if (!movies().length) { <p class="notice">No active movies available. Activate a movie first.</p> }
+    @if (!halls().length) { <p class="notice">No active halls available. Activate a hall first.</p> }
+    <form class="screening-form" [formGroup]="form" (ngSubmit)="submit()">
+      @if (serverError()) { <p class="error-banner">{{ serverError() }}</p> }
+      <label>Movie<select formControlName="movieId"><option value="">Select movie</option>@for (movie of movies(); track movie.id) { <option [value]="movie.id">{{ movie.title }}</option> }</select></label>
+      @if (form.controls.movieId.touched && form.controls.movieId.invalid) { <small class="error-text">Movie is required.</small> }
+      <label>Hall<select formControlName="hallId"><option value="">Select hall</option>@for (hall of halls(); track hall.id) { <option [value]="hall.id">{{ hall.title }} ({{ hall.type }})</option> }</select></label>
+      @if (form.controls.hallId.touched && form.controls.hallId.invalid) { <small class="error-text">Hall is required.</small> }
+      <div class="field-grid">
+        <label>Start date<input type="date" formControlName="startDate" /></label>
+        <label>Start time<input type="time" formControlName="startTime" /></label>
+      </div>
+      @if (form.controls.startDate.touched && form.controls.startDate.invalid) { <small class="error-text">Start date is required.</small> }
+      @if (form.controls.startTime.touched && form.controls.startTime.invalid) { <small class="error-text">Start time is required.</small> }
+      <label>Price (EGP)<input type="number" min="0.01" step="0.01" formControlName="price" /></label>
+      @if (form.controls.price.touched && form.controls.price.invalid) { <small class="error-text">Price must be a number greater than zero.</small> }
+      <button type="submit" [disabled]="form.invalid || submitting() || !movies().length || !halls().length">{{ submitting() ? 'Creating...' : 'Create screening' }}</button>
+    </form>
+  }
+</section>

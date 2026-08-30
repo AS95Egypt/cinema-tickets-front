@@ -1,0 +1,40 @@
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <p class="eyebrow">CinemaHub Admin</p>
+      <h1>Control center</h1>
+      @if (currentUser(); as user) {
+        <p class="user-summary">{{ user.username }} - {{ user.email }}</p>
+      }
+    </div>
+
+    <nav aria-label="Admin navigation">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+      <a routerLink="/admin/halls" routerLinkActive="active">Halls</a>
+      <a routerLink="/admin/movies" routerLinkActive="active">Movies</a>
+      <a routerLink="/admin/screenings" routerLinkActive="active">Screenings</a>
+    </nav>
+  </aside>
+
+  <main class="main-panel">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Management workspace</p>
+        <h2>Admin dashboard</h2>
+      </div>
+
+      <div class="profile-card">
+        @if (currentUser(); as user) {
+          <span class="profile-name">{{ user.username }}</span>
+          <span class="profile-email">{{ user.email }}</span>
+        }
+      </div>
+
+      <button type="button" class="logout-button" (click)="logout()">Logout</button>
+    </header>
+
+    <section class="content-panel">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>

@@ -5,6 +5,11 @@
       <nav>
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
         <a routerLink="/movies" routerLinkActive="active">Movies</a>
+        <a routerLink="/register" routerLinkActive="active">Register</a>
+        <a routerLink="/login" routerLinkActive="active">Login</a>
+        @if (authService.isAuthenticated()) {
+          <button type="button" (click)="logout()">Logout</button>
+        }
       </nav>
     </div>
   </aside>

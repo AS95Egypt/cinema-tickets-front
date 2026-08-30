@@ -1,0 +1,29 @@
+<section class="hall-edit-page">
+  @if (loading()) {
+    <div class="state-card">Loading hall details...</div>
+  } @else if (error()) {
+    <div class="state-card error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/admin/halls">Back to list</a>
+    </div>
+  } @else {
+    @if (hall(); as item) {
+      <div class="page-header">
+        <div>
+          <p class="eyebrow">Edit hall</p>
+          <h1>{{ item.title }}</h1>
+        </div>
+
+        <a class="secondary-link" routerLink="/admin/halls">Back to list</a>
+      </div>
+
+      <app-hall-form
+        [hall]="item"
+        [serverError]="serverError()"
+        [submitting]="submitting()"
+        submitLabel="Save changes"
+        (formSubmit)="submitForm($event)"
+      />
+    }
+  }
+</section>

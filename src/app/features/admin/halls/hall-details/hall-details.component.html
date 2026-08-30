@@ -1,0 +1,64 @@
+<section class="hall-details-page">
+  @if (successMessage()) {
+    <p class="success-banner">{{ successMessage() }}</p>
+  }
+
+  @if (loading()) {
+    <div class="state-card">Loading hall details...</div>
+  } @else if (error()) {
+    <div class="state-card error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/admin/halls">Back to list</a>
+    </div>
+  } @else {
+    @if (hall(); as item) {
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Hall details</p>
+          <h1>{{ item.title }}</h1>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="secondary-button" (click)="toggleHall()">
+            {{ item.isActive ? 'Deactivate' : 'Activate' }}
+          </button>
+          <button type="button" class="secondary-button" (click)="edit()">Edit</button>
+          <button type="button" class="primary-button" (click)="back()">Back to list</button>
+        </div>
+      </header>
+
+      <div class="details-card">
+        <dl>
+          <div>
+            <dt>Title</dt>
+            <dd>{{ item.title }}</dd>
+          </div>
+          <div>
+            <dt>Number of seats</dt>
+            <dd>{{ item.numberOfSeats }}</dd>
+          </div>
+          <div>
+            <dt>Type</dt>
+            <dd>{{ item.type }}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>
+              <span class="status-badge" [class.inactive]="!item.isActive">
+                {{ item.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt>Created at</dt>
+            <dd>{{ item.createdAt | date: 'medium' }}</dd>
+          </div>
+          <div>
+            <dt>Updated at</dt>
+            <dd>{{ item.updatedAt | date: 'medium' }}</dd>
+          </div>
+        </dl>
+      </div>
+    }
+  }
+</section>

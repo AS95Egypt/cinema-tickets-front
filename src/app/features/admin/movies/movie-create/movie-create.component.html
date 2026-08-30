@@ -1,0 +1,17 @@
+<section class="movie-create-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Create movie</p>
+      <h1>New movie</h1>
+    </div>
+
+    <a class="secondary-link" routerLink="/admin/movies">Back to list</a>
+  </div>
+
+  <app-movie-form
+    [serverError]="serverError()"
+    [submitting]="submitting()"
+    submitLabel="Create movie"
+    (save)="submitForm($event)"
+  />
+</section>

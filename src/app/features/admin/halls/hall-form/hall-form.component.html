@@ -1,0 +1,36 @@
+<form class="hall-form" [formGroup]="form" (ngSubmit)="submit()">
+  @if (serverError) {
+    <p class="error-banner">{{ serverError }}</p>
+  }
+
+  <label>
+    Title
+    <input type="text" formControlName="title" />
+  </label>
+  @if (form.controls.title.touched && form.controls.title.invalid) {
+    <small class="error-text">Title is required.</small>
+  }
+
+  <label>
+    Number of seats
+    <input type="number" min="1" formControlName="numberOfSeats" />
+  </label>
+  @if (form.controls.numberOfSeats.touched && form.controls.numberOfSeats.invalid) {
+    <small class="error-text">Number of seats must be greater than zero.</small>
+  }
+
+  <label>
+    Type
+    <select formControlName="type">
+      <option value="">Select hall type</option>
+      @for (type of hallTypes; track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+  </label>
+  @if (form.controls.type.touched && form.controls.type.invalid) {
+    <small class="error-text">Hall type is required.</small>
+  }
+
+  <button type="submit" [disabled]="form.invalid || submitting">{{ submitLabel }}</button>
+</form>

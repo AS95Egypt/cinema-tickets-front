@@ -1,0 +1,35 @@
+.auth-card {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+input {
+  padding: 0.75rem;
+}
+
+.error,
+.error-banner {
+  color: #b00020;
+}
+
+.success-banner {
+  color: #0a7b34;
+}
+
+.helper {
+  margin-top: 1rem;
+}

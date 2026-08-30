@@ -1,0 +1,52 @@
+.forbidden-card {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 34rem;
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid #f4c2c2;
+  background: linear-gradient(180deg, #fff7f7 0%, #ffffff 100%);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #b91c1c;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+a,
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+a {
+  display: inline-flex;
+  align-items: center;
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+button {
+  color: #fff;
+  background: #0f172a;
+}

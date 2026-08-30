@@ -1,0 +1,49 @@
+<section class="screening-list-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Screenings</p>
+      <h1>Screening management</h1>
+      <p class="description">Review the cinema schedule and plan new movie screenings.</p>
+    </div>
+    <button type="button" class="primary-button" (click)="createScreening()">Create screening</button>
+  </header>
+
+  @if (successMessage()) { <p class="success-banner">{{ successMessage() }}</p> }
+  @if (warning()) { <p class="warning-banner">{{ warning() }}</p> }
+
+  @if (loading()) {
+    <div class="state-card">Loading screenings...</div>
+  } @else if (error()) {
+    <div class="state-card error-state">
+      <p>{{ error() }}</p>
+      <button type="button" class="secondary-button" (click)="loadScreenings()">Retry</button>
+    </div>
+  } @else if (!hasScreenings()) {
+    <div class="state-card">No screenings have been scheduled yet.</div>
+  } @else {
+    @for (group of groups(); track group.dateKey) {
+      <section class="date-group">
+        <h2>{{ formatDate(group.dateKey) }}</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Movie</th><th>Date</th><th>Start time</th><th>Hall</th><th>Hall type</th><th>Price</th></tr>
+            </thead>
+            <tbody>
+              @for (screening of group.screenings; track screening.id) {
+                <tr [class.past-row]="screening.isPast">
+                  <td>{{ screening.movieTitle }}</td>
+                  <td>{{ group.dateKey }}</td>
+                  <td>{{ formatTime(screening.startDateTime) }}</td>
+                  <td>{{ screening.hallName }}</td>
+                  <td>{{ screening.hallType }}</td>
+                  <td>{{ formatPrice(screening.price) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  }
+</section>

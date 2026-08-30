@@ -1,0 +1,15 @@
+<section class="summary-page">
+  @if (reservationState.reservationStatus() === 'Held') {
+    <div class="summary-card">
+      <p>Reservation ID: {{ reservationState.reservationId() }}</p>
+      <p>Price: {{ reservationState.price() }} EGP</p>
+      <p>Seats held for: {{ formatRemaining() }}</p>
+      <button type="button" (click)="continue()" [disabled]="reservationState.secondsRemaining() <= 0">Continue to Checkout</button>
+    </div>
+  } @else {
+    <div class="summary-card">
+      <p>Your seat hold has expired. Please select your seat again.</p>
+      <a [routerLink]="['/movies', reservationState.movieId(), 'screenings', reservationState.screeningId(), 'seats']">Select seat again</a>
+    </div>
+  }
+</section>

@@ -1,0 +1,17 @@
+<section class="hall-create-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Create hall</p>
+      <h1>New cinema hall</h1>
+    </div>
+
+    <a class="secondary-link" routerLink="/admin/halls">Back to list</a>
+  </div>
+
+  <app-hall-form
+    [serverError]="serverError()"
+    [submitting]="submitting()"
+    submitLabel="Create hall"
+    (formSubmit)="submitForm($event)"
+  />
+</section>

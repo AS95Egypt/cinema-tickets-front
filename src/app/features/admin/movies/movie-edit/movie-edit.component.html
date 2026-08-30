@@ -1,0 +1,29 @@
+<section class="movie-edit-page">
+  @if (loading()) {
+    <div class="state-card">Loading movie details...</div>
+  } @else if (error()) {
+    <div class="state-card error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/admin/movies">Back to list</a>
+    </div>
+  } @else {
+    @if (movie(); as item) {
+      <div class="page-header">
+        <div>
+          <p class="eyebrow">Edit movie</p>
+          <h1>{{ item.title }}</h1>
+        </div>
+
+        <a class="secondary-link" routerLink="/admin/movies">Back to list</a>
+      </div>
+
+      <app-movie-form
+        [initialValue]="item"
+        [serverError]="serverError()"
+        [submitting]="submitting()"
+        submitLabel="Save changes"
+        (save)="submitForm($event)"
+      />
+    }
+  }
+</section>

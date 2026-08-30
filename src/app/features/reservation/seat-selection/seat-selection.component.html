@@ -1,0 +1,53 @@
+<section class="seat-page">
+  <a class="back-link" [routerLink]="['/movies', reservationState.movieId() ?? '']">Back</a>
+
+  @if (reservationState.isLoading()) {
+    <div class="state-card">Loading seats...</div>
+  } @else if (reservationState.errorMessage()) {
+    <div class="state-card error">{{ reservationState.errorMessage() }}</div>
+  } @else {
+    @if (reservationState.seats().length) {
+      <div class="screen">
+        @for (row of rows(); track row) {
+          <div class="row">
+            @for (seatNumber of rowSeats(row); track seatNumber) {
+              <button
+                type="button"
+                class="seat"
+                [class.available]="seatState(seatNumber) === 'available'"
+                [class.selected]="seatState(seatNumber) === 'selected'"
+                [class.blocked]="seatState(seatNumber) === 'held' || seatState(seatNumber) === 'reserved'"
+                [disabled]="seatState(seatNumber) === 'held' || seatState(seatNumber) === 'reserved'"
+                (click)="selectSeat(seatNumber)"
+              >
+                @if (seatState(seatNumber) === 'held' || seatState(seatNumber) === 'reserved') {
+                  {{ seatNumber }} 
+                  ×
+                } @else {
+                  {{ seatNumber }}
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="state-card">No seats were returned for this screening.</div>
+    }
+
+    @if (reservationState.selectedSeat() !== null) {
+      <div class="summary">
+        <p>Selected Seat: {{ reservationState.selectedSeat() }}</p>
+        <p>Price: {{ reservationState.price() }} EGP</p>
+      </div>
+    }
+
+    @if (reservationState.conflictMessage()) {
+      <div class="state-card error">{{ reservationState.conflictMessage() }}</div>
+    }
+
+    <button type="button" class="continue-button" [disabled]="reservationState.selectedSeat() === null || submitting()" (click)="continue()">
+      Reserve Seat
+    </button>
+  }
+</section>

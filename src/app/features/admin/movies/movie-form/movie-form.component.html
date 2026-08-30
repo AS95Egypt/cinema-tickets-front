@@ -1,0 +1,73 @@
+<form class="movie-form" [formGroup]="form" (ngSubmit)="submit()">
+  @if (serverError) {
+    <p class="error-banner">{{ serverError }}</p>
+  }
+
+  <label>
+    Title
+    <input type="text" formControlName="title" />
+  </label>
+  @if (form.controls.title.touched && form.controls.title.invalid) {
+    <small class="error-text">Title is required.</small>
+  }
+
+  <label>
+    Genre
+    <select formControlName="genre">
+      <option value="">Select genre</option>
+      @for (genre of movieGenres; track genre) {
+        <option [value]="genre">{{ genre }}</option>
+      }
+    </select>
+  </label>
+  @if (form.controls.genre.touched && form.controls.genre.invalid) {
+    <small class="error-text">Genre is required.</small>
+  }
+
+  <label>
+    Duration
+    <input type="number" min="1" formControlName="duration" />
+  </label>
+  @if (form.controls.duration.touched && form.controls.duration.invalid) {
+    <small class="error-text">Duration must be greater than zero.</small>
+  }
+
+  <label>
+    Release date
+    <input type="date" formControlName="releaseDate" />
+  </label>
+  @if (form.controls.releaseDate.touched && form.controls.releaseDate.invalid) {
+    <small class="error-text">Release date is required.</small>
+  }
+
+  <label>
+    Language
+    <input type="text" formControlName="language" />
+  </label>
+  @if (form.controls.language.touched && form.controls.language.invalid) {
+    <small class="error-text">Language is required.</small>
+  }
+
+  <label>
+    Description
+    <textarea rows="5" formControlName="description"></textarea>
+  </label>
+  @if (form.controls.description.touched && form.controls.description.invalid) {
+    <small class="error-text">Description is required.</small>
+  }
+
+  <label>
+    Actors
+    <textarea rows="3" formControlName="actors"></textarea>
+  </label>
+
+  <label>
+    Trailer URL
+    <input type="url" formControlName="trailerUrl" placeholder="https://..." />
+  </label>
+  @if (form.controls.trailerUrl.touched && form.controls.trailerUrl.invalid) {
+    <small class="error-text">Enter a valid URL starting with http:// or https://.</small>
+  }
+
+  <button type="submit" [disabled]="form.invalid || submitting">{{ submitLabel }}</button>
+</form>

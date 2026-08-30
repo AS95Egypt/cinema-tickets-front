@@ -1,0 +1,51 @@
+.hall-edit-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.state-card {
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: white;
+}
+
+.error-state {
+  display: grid;
+  gap: 0.75rem;
+  color: #b91c1c;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366f1;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.secondary-link,
+.error-state a {
+  text-decoration: none;
+  font-weight: 700;
+  color: #4338ca;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+  }
+}
