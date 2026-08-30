@@ -1,27 +1,156 @@
-# Cinematicketfront
+# 🎬 Cinema Reservation Web
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+Angular frontend for a cinema ticket reservation system.
 
-## Development server
+The application provides customer and administrator interfaces for browsing movies, selecting screenings, reserving seats, completing payment, and managing cinema data.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This project consumes the REST API provided by:
 
-## Code scaffolding
+**Backend:** [Cinema Reservation API](https://github.com/AS95Egypt/cinema-tickets-back)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## 🚀 Features
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### 👤 Customer
 
-## Running unit tests
+* User registration
+* User login
+* JWT authentication
+* Browse active movies
+* View movie details
+* Browse movie screenings
+* Select screening
+* View seat availability
+* Select a seat
+* Temporarily hold a seat
+* Countdown for temporary seat hold
+* Checkout
+* Mock payment
+* Payment result handling
+* Reservation confirmation
+* View tickets/reservations
+* Reservation cancellation/expiration
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 👨‍💼 Administrator
 
-## Running end-to-end tests
+* Admin authentication and authorization
+* Admin dashboard
+* Cinema hall management
+* Movie management
+* Screening management
+* Activate/deactivate halls
+* Activate/deactivate movies
+* Screening schedule management
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+---
 
-## Further help
+# 📋 Prerequisites
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Make sure the following are installed:
+
+* Node.js
+* npm
+* Angular CLI
+
+
+---
+
+# 📥 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/AS95Egypt/cinema-tickets-front.git
+```
+
+Navigate to the project:
+
+```bash
+cd cinema-tickets-front
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+---
+
+# ⚙️ Backend Configuration
+
+The frontend communicates with the Cinema Reservation API.
+
+The backend repository is available here:
+
+**[Cinema Reservation API](https://github.com/AS95Egypt/cinema-tickets-back)**
+
+Make sure the backend is running before testing functionality that requires API communication.
+
+---
+
+# ▶️ Running the Application
+
+Start the Angular development server:
+
+```bash
+ng serve
+```
+
+Or:
+
+```bash
+npm start
+```
+
+The application is typically available at:
+
+```text
+http://localhost:4200
+```
+
+The terminal will display the actual URL if a different port is used.
+
+---
+
+# 🧪 Testing
+
+Run unit tests:
+
+```bash
+ng test
+```
+
+Run tests in a CI-friendly environment where supported:
+
+```bash
+ng test --watch=false
+```
+
+
+---
+
+# 🔗 Related Project
+
+This Angular application consumes the backend API:
+
+**Cinema Reservation API**
+
+https://github.com/AS95Egypt/cinema-tickets-back
+
+For backend setup, database configuration, migrations, and API documentation, see the backend repository.
+
+---
+
+# 📌 Project Status
+
+🚧 **Under Development**
+
+The application is being developed incrementally with customer reservation and administrator management functionality.
+
+---
+
+## 📄 License
+
+This project is intended for learning and development purposes.
