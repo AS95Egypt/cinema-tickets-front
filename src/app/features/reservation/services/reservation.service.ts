@@ -24,4 +24,11 @@ export class ReservationService {
       request,
     );
   }
+
+  payReservation(reservationId: string): Observable<unknown> {
+    return this.http.put(
+      `${this.apiUrl}/reservations/${reservationId}/pay`,
+      {},
+    );
+  }
 }

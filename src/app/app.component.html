@@ -1,17 +1,24 @@
 <div class="app-shell">
   <aside class="sidebar">
-    <div>
+    <div class="sidebar-main">
       <h2>CinemaHub</h2>
-      <nav>
+      <nav aria-label="Main navigation">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
         <a routerLink="/movies" routerLinkActive="active">Movies</a>
-        <a routerLink="/register" routerLinkActive="active">Register</a>
-        <a routerLink="/login" routerLinkActive="active">Login</a>
-        @if (authService.isAuthenticated()) {
-          <button type="button" (click)="logout()">Logout</button>
+        @if (authService.isAdmin()) {
+          <a routerLink="/admin" routerLinkActive="active">Admin dashboard</a>
         }
       </nav>
     </div>
+
+    <nav class="auth-nav" aria-label="Account navigation">
+      @if (!authService.isAuthenticated()) {
+        <a routerLink="/register" routerLinkActive="active">Register</a>
+        <a routerLink="/login" routerLinkActive="active">Login</a>
+      } @else {
+        <button type="button" (click)="logout()">Logout</button>
+      }
+    </nav>
   </aside>
 
   <main class="content">

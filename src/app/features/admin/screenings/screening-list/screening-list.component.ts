@@ -1,20 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, concatMap, forkJoin, from, map, of, toArray } from 'rxjs';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { Hall } from '../../halls/hall.models';
 import { HallService } from '../../halls/hall.service';
 import { Movie } from '../../movies/movie.models';
 import { MovieService } from '../../movies/movie.service';
 import { mapScreeningErrorMessage } from '../screening-error.util';
-import { Screening, ScreeningViewModel } from '../screening.models';
+import { ScreeningListItem, ScreeningViewModel } from '../screening.models';
 import { ScreeningService } from '../screening.service';
-
-interface ScreeningGroup {
-  dateKey: string;
-  screenings: ScreeningViewModel[];
-}
 
 @Component({
   selector: 'app-screening-list',
@@ -23,59 +18,130 @@ interface ScreeningGroup {
   templateUrl: './screening-list.component.html',
   styleUrl: './screening-list.component.css'
 })
-export class ScreeningListComponent implements OnInit {
+export class ScreeningListComponent implements AfterViewInit, OnDestroy, OnInit {
   private readonly movieService = inject(MovieService);
   private readonly hallService = inject(HallService);
   private readonly screeningService = inject(ScreeningService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
+  @ViewChild('loadMoreTrigger') private loadMoreTrigger?: ElementRef<HTMLElement>;
+  private intersectionObserver?: IntersectionObserver;
 
-  readonly groups = signal<ScreeningGroup[]>([]);
+  readonly screenings = signal<ScreeningViewModel[]>([]);
+  readonly movies = signal<Movie[]>([]);
+  readonly halls = signal<Hall[]>([]);
+  readonly selectedMovieId = signal('');
+  readonly selectedHallId = signal('');
   readonly loading = signal(true);
+  readonly loadingMore = signal(false);
   readonly error = signal<string | null>(null);
   readonly warning = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
-  readonly hasScreenings = computed(() => this.groups().some((group) => group.screenings.length > 0));
+  readonly hasMore = signal(false);
+  readonly hasScreenings = computed(() => this.screenings().length > 0);
 
   ngOnInit(): void {
     const message = history.state?.successMessage;
     if (typeof message === 'string' && message.trim()) {
       this.successMessage.set(message);
     }
-    this.loadScreenings();
-  }
-
-  loadScreenings(): void {
-    this.loading.set(true);
-    this.error.set(null);
-    this.warning.set(null);
-
     forkJoin({ movies: this.movieService.getMovies(), halls: this.hallService.getHalls() })
-      .pipe(
-        concatMap(({ movies, halls }) =>
-          from(movies).pipe(
-            concatMap((movie) =>
-              this.screeningService.getScreeningsForMovie(movie.id).pipe(
-                map((screenings) => screenings.map((screening) => this.toViewModel(screening, movie, halls))),
-                catchError(() => {
-                  this.warning.set('Some screenings could not be loaded. Refresh to try again.');
-                  return of([] as ScreeningViewModel[]);
-                })
-              )
-            ),
-            toArray()
-          )
-        ),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (nested) => {
-          this.groups.set(this.groupScreenings(nested.flat()));
-          this.loading.set(false);
+        next: ({ movies, halls }) => {
+          this.movies.set(movies);
+          this.halls.set(halls);
+          this.loadScreenings();
         },
         error: (error) => {
           this.error.set(error?.message ?? mapScreeningErrorMessage(error));
           this.loading.set(false);
+        }
+      });
+  }
+
+  ngAfterViewInit(): void {
+    this.intersectionObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        this.loadNextPage();
+      }
+    }, { rootMargin: '240px' });
+    if (this.loadMoreTrigger) {
+      this.intersectionObserver.observe(this.loadMoreTrigger.nativeElement);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.intersectionObserver?.disconnect();
+  }
+
+  loadScreenings(): void {
+    this.screenings.set([]);
+    this.loadPage(1, false);
+  }
+
+  loadNextPage(): void {
+    if (!this.loading() && !this.loadingMore() && this.hasMore()) {
+      this.loadPage(this.nextPage, true);
+    }
+  }
+
+  onMovieFilterChange(event: Event): void {
+    this.selectedMovieId.set((event.target as HTMLSelectElement).value);
+    this.loadScreenings();
+  }
+
+  onHallFilterChange(event: Event): void {
+    this.selectedHallId.set((event.target as HTMLSelectElement).value);
+    this.loadScreenings();
+  }
+
+  clearMovieFilter(): void {
+    this.selectedMovieId.set('');
+    this.loadScreenings();
+  }
+
+  clearHallFilter(): void {
+    this.selectedHallId.set('');
+    this.loadScreenings();
+  }
+
+  private nextPage = 1;
+
+  private loadPage(page: number, append: boolean): void {
+    if (append) {
+      this.loadingMore.set(true);
+    } else {
+      this.loading.set(true);
+    }
+    this.error.set(null);
+    this.warning.set(null);
+
+    this.screeningService.getScreenings(
+      page,
+      10,
+      this.selectedMovieId() || undefined,
+      this.selectedHallId() || undefined
+    )
+      .pipe(
+        catchError((error) => {
+          this.error.set(error?.message ?? mapScreeningErrorMessage(error));
+          return of(null);
+        }),
+        finalize(() => {
+          this.loading.set(false);
+          this.loadingMore.set(false);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: (response) => {
+          if (!response) return;
+          const current = this.screenings();
+          const incoming = response.items.map((screening) => this.toViewModel(screening));
+          this.screenings.set(append ? [...current, ...incoming] : incoming);
+          this.nextPage = response.page + 1;
+          this.hasMore.set(response.page * response.pageSize < response.totalCount);
         }
       });
   }
@@ -100,29 +166,14 @@ export class ScreeningListComponent implements OnInit {
     return new Date(value).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   }
 
-  private toViewModel(screening: Screening, movie: Movie, halls: Hall[]): ScreeningViewModel {
-    const hall = halls.find((item) => item.id === screening.hallId);
+  private toViewModel(screening: ScreeningListItem): ScreeningViewModel {
     return {
       ...screening,
-      movieTitle: movie.title,
-      hallName: hall?.title ?? 'Unknown hall',
-      hallType: hall?.type ?? 'Unknown',
+      movieTitle: screening.movie.title,
+      hallName: screening.hall.title,
+      hallType: screening.hall.type,
       isPast: new Date(screening.startDateTime) < new Date()
     };
   }
 
-  private groupScreenings(screenings: ScreeningViewModel[]): ScreeningGroup[] {
-    const grouped = new Map<string, ScreeningViewModel[]>();
-    for (const screening of screenings) {
-      const dateKey = screening.startDateTime.slice(0, 10);
-      grouped.set(dateKey, [...(grouped.get(dateKey) ?? []), screening]);
-    }
-
-    return Array.from(grouped.entries())
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([dateKey, items]) => ({
-        dateKey,
-        screenings: items.sort((left, right) => left.startDateTime.localeCompare(right.startDateTime))
-      }));
-  }
 }

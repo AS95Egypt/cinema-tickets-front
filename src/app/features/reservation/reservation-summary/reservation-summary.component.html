@@ -1,15 +1,49 @@
 <section class="summary-page">
   @if (reservationState.reservationStatus() === 'Held') {
-    <div class="summary-card">
-      <p>Reservation ID: {{ reservationState.reservationId() }}</p>
-      <p>Price: {{ reservationState.price() }} EGP</p>
-      <p>Seats held for: {{ formatRemaining() }}</p>
-      <button type="button" (click)="continue()" [disabled]="reservationState.secondsRemaining() <= 0">Continue to Checkout</button>
+  <div class="summary-card">
+    <div class="summary-heading">
+      <div>
+        <p class="eyebrow">Reservation summary</p>
+        <h1>Confirm your booking</h1>
+      </div>
+      <span class="status-badge">Seats held</span>
     </div>
+
+    <div class="summary-details">
+      <div>
+        <span class="detail-label">Reservation ID</span>
+        <strong>{{ reservationState.reservationId() }}</strong>
+      </div>
+      <div>
+        <span class="detail-label">Price</span>
+        <strong>{{ reservationState.price() }} EGP</strong>
+      </div>
+      <div>
+        <span class="detail-label">Hold expires in</span>
+        <strong>{{ formatRemaining() }}</strong>
+      </div>
+    </div>
+
+    @if (paymentMessage()) {
+    <p class="message success-message" role="status">{{ paymentMessage() }}</p>
+    }
+    @if (paymentError()) {
+    <p class="message error-message" role="alert">{{ paymentError() }}</p>
+    }
+
+    <button type="button" class="pay-button" (click)="pay()"
+      [disabled]="reservationState.secondsRemaining() <= 0 || isPaying() || paymentSuccessful()">
+      {{ isPaying() ? 'Processing payment...' : paymentSuccessful() ? 'Payment completed' : 'Pay now' }}
+    </button>
+  </div>
   } @else {
-    <div class="summary-card">
-      <p>Your seat hold has expired. Please select your seat again.</p>
-      <a [routerLink]="['/movies', reservationState.movieId(), 'screenings', reservationState.screeningId(), 'seats']">Select seat again</a>
-    </div>
+  <div class="summary-card">
+    <p class="eyebrow">Reservation unavailable</p>
+    <h1>Seat hold expired</h1>
+    <p>Your seat hold has expired. Please select your seat again.</p>
+    <a class="secondary-link"
+      [routerLink]="['/movies', reservationState.movieId(), 'screenings', reservationState.screeningId(), 'seats']">Select
+      seat again</a>
+  </div>
   }
 </section>

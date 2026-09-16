@@ -8,6 +8,29 @@
     <button type="button" class="primary-button" (click)="createScreening()">Create screening</button>
   </header>
 
+  <div class="filters" aria-label="Screening filters">
+    <label>
+      Movie
+      <span class="filter-control">
+        <select [value]="selectedMovieId()" (change)="onMovieFilterChange($event)">
+          <option value="">All movies</option>
+          @for (movie of movies(); track movie.id) { <option [value]="movie.id">{{ movie.title }}</option> }
+        </select>
+        @if (selectedMovieId()) { <button type="button" class="clear-button" aria-label="Clear movie filter" (click)="clearMovieFilter()">×</button> }
+      </span>
+    </label>
+    <label>
+      Hall
+      <span class="filter-control">
+        <select [value]="selectedHallId()" (change)="onHallFilterChange($event)">
+          <option value="">All halls</option>
+          @for (hall of halls(); track hall.id) { <option [value]="hall.id">{{ hall.title }}</option> }
+        </select>
+        @if (selectedHallId()) { <button type="button" class="clear-button" aria-label="Clear hall filter" (click)="clearHallFilter()">×</button> }
+      </span>
+    </label>
+  </div>
+
   @if (successMessage()) { <p class="success-banner">{{ successMessage() }}</p> }
   @if (warning()) { <p class="warning-banner">{{ warning() }}</p> }
 
@@ -21,29 +44,26 @@
   } @else if (!hasScreenings()) {
     <div class="state-card">No screenings have been scheduled yet.</div>
   } @else {
-    @for (group of groups(); track group.dateKey) {
-      <section class="date-group">
-        <h2>{{ formatDate(group.dateKey) }}</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Movie</th><th>Date</th><th>Start time</th><th>Hall</th><th>Hall type</th><th>Price</th></tr>
-            </thead>
-            <tbody>
-              @for (screening of group.screenings; track screening.id) {
-                <tr [class.past-row]="screening.isPast">
-                  <td>{{ screening.movieTitle }}</td>
-                  <td>{{ group.dateKey }}</td>
-                  <td>{{ formatTime(screening.startDateTime) }}</td>
-                  <td>{{ screening.hallName }}</td>
-                  <td>{{ screening.hallType }}</td>
-                  <td>{{ formatPrice(screening.price) }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </section>
-    }
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Movie</th><th>Date</th><th>Start time</th><th>Hall</th><th>Hall type</th><th>Price</th></tr>
+        </thead>
+        <tbody>
+          @for (screening of screenings(); track screening.id) {
+            <tr [class.past-row]="screening.isPast">
+              <td>{{ screening.movieTitle }}</td>
+              <td>{{ formatDate(screening.startDateTime.slice(0, 10)) }}</td>
+              <td>{{ formatTime(screening.startDateTime) }}</td>
+              <td>{{ screening.hallName }}</td>
+              <td>{{ screening.hallType }}</td>
+              <td>{{ formatPrice(screening.price) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
+  @if (loadingMore()) { <div class="loading-more">Loading more screenings...</div> }
+  <div #loadMoreTrigger class="load-more-trigger" aria-hidden="true"></div>
 </section>

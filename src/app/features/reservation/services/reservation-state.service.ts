@@ -140,8 +140,8 @@ export class ReservationStateService {
       catchError((error) => {
         this.isLoading.set(false);
         if (error?.status === 409) {
-          this.conflictMessage.set('Sorry, one or selected seat are no longer available. Please select different seat.');
           this.loadSeatAvailability(screeningId).subscribe();
+          this.conflictMessage.set('Sorry, one or selected seat are no longer available. Please select different seat.');
           return EMPTY;
         }
         this.errorMessage.set(error?.status === 500 ? 'Something went wrong. Please try again later.' : 'Failed to reserve seat. Please try again.');

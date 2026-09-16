@@ -4,6 +4,11 @@
 h1, h2, p { margin: 0; }
 h2 { font-size: 1.15rem; color: #334155; }
 .description { margin-top: .45rem; color: #475569; }
+.filters { display: flex; flex-wrap: wrap; gap: 1rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 16px; background: white; }
+.filters label { display: grid; gap: .4rem; color: #334155; font-weight: 700; }
+.filter-control { display: flex; align-items: center; gap: .35rem; }
+.filters select { min-width: 220px; padding: .65rem .75rem; border: 1px solid #cbd5e1; border-radius: 10px; background: white; color: #0f172a; }
+.clear-button { border: 0; background: transparent; color: #64748b; font-size: 1.4rem; line-height: 1; cursor: pointer; }
 .primary-button, .secondary-button { border: 0; border-radius: 999px; padding: .75rem 1rem; font-weight: 700; cursor: pointer; }
 .primary-button { background: #0f172a; color: white; }
 .secondary-button { background: #e2e8f0; color: #0f172a; }
@@ -19,4 +24,6 @@ th, td { padding: .95rem 1rem; text-align: left; border-bottom: 1px solid #e2e8f
 th { background: #f8fafc; color: #334155; }
 .past-row { color: #64748b; background: #f8fafc; }
 .past-row td:first-child::after { content: ' Past'; color: #94a3b8; font-size: .75rem; font-weight: 700; }
+.loading-more { padding: .75rem; text-align: center; color: #64748b; }
+.load-more-trigger { height: 1px; }
 @media (max-width: 768px) { .page-header, .error-state { flex-direction: column; align-items: stretch; } .primary-button { width: 100%; } }
